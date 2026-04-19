@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
@@ -34,6 +35,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 public class UserInterface
@@ -69,6 +71,7 @@ public class UserInterface
     TitledBorder titledBorder1;
     TitledBorder titledBorder2;
     TitledBorder titledBorder3;
+    private Timer timedDialogueTimer;
     ImageIcon upIcon;
     ImageIcon useIcon;
 
@@ -384,6 +387,42 @@ public class UserInterface
         this.jList1.repaint();
     }
 
+    public void playTimedDialogue(String imagePath, final String[] lines, final int[] delays, final Runnable onComplete) {
+        if (lines == null || delays == null || lines.length == 0 || lines.length != delays.length) {
+            throw new IllegalArgumentException("Timed dialogue requires matching lines and delays");
+        }
+        if (this.timedDialogueTimer != null && this.timedDialogueTimer.isRunning()) {
+            this.timedDialogueTimer.stop();
+        }
+        if (imagePath != null && !imagePath.equals("")) {
+            this.setImage(imagePath);
+        }
+        this.setInputEnabled(false);
+        final int[] index = new int[]{0};
+        this.timedDialogueTimer = new Timer(delays[0], null);
+        this.timedDialogueTimer.setRepeats(false);
+        this.timedDialogueTimer.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                UserInterface.this.println(lines[index[0]]);
+                ++index[0];
+                if (index[0] >= lines.length) {
+                    UserInterface.this.timedDialogueTimer.stop();
+                    UserInterface.this.timedDialogueTimer = null;
+                    if (onComplete != null) {
+                        onComplete.run();
+                    } else {
+                        UserInterface.this.setInputEnabled(true);
+                    }
+                    return;
+                }
+                UserInterface.this.timedDialogueTimer.setInitialDelay(delays[index[0]]);
+                UserInterface.this.timedDialogueTimer.restart();
+            }
+        });
+        this.timedDialogueTimer.start();
+    }
+
     public void setImage(String commandLine) {
         this.jLabel1.setIcon(new ImageIcon((class$egoproject$UserInterface == null
                 ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
@@ -394,6 +433,20 @@ public class UserInterface
         this.jLabel2.setIcon(new ImageIcon((class$egoproject$UserInterface == null
                 ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
                 : class$egoproject$UserInterface).getResource(commandLine)));
+    }
+
+    public void setInputEnabled(boolean enabled) {
+        this.jButton1.setEnabled(enabled);
+        this.jButton2.setEnabled(enabled);
+        this.jButton3.setEnabled(enabled);
+        this.jButton4.setEnabled(enabled);
+        this.jButton5.setEnabled(enabled);
+        this.jButton6.setEnabled(enabled);
+        this.jButton7.setEnabled(enabled);
+        this.jButton8.setEnabled(enabled);
+        this.jButton9.setEnabled(enabled);
+        this.jList1.setEnabled(enabled);
+        this.jTextField2.setEnabled(enabled);
     }
 
     void this_windowClosing(WindowEvent e) {

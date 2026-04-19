@@ -10,6 +10,9 @@ import egoproject.Parser;
 import egoproject.People;
 import egoproject.Room;
 import egoproject.UserInterface;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 public class GameEngine {
     private Room currentRoom;
@@ -457,21 +460,49 @@ public class GameEngine {
                 case 3: {
                     this.gui.println("[Me] I... I... I don't understand.");
                     this.gui.println("[Headmaster] You don't need to, yet. Now prepare, I'm going to hypnotize you!");
-                    this.gui.setImage("img/headmasterANI.gif");
-                    this.hero.headmastertalk = 4;
-                    break;
-                }
-                case 4: {
-                    this.gui.println("[Me] You? Hypnotize me? NO WAY!");
-                    this.gui.println("[Headmaster] Relax, watch my eyes...");
+                    this.gui.playTimedDialogue("img/headmasterANI.gif",
+                            new String[]{
+                                    "[Me] You? Hypnotize me? NO WAY!",
+                                    "[Headmaster] Relax, watch my eyes...",
+                                    "[Me] I... will... not... let.... ",
+                                    "[Headmaster] But you have, you already have...",
+                                    "[Me] No... must... get... out..."
+                            },
+                            new int[]{1200, 1800, 2200, 2400, 1800},
+                            new Runnable() {
+
+                                public void run() {
+                                    GameEngine.this.hero.headmastertalk = 6;
+                                    GameEngine.this.hero.headmasterout = true;
+                                    Timer transitionTimer = new Timer(2000, new ActionListener() {
+
+                                        public void actionPerformed(ActionEvent e) {
+                                            GameEngine.this.currentRoom = GameEngine.this.currentRoom.getExit("back");
+                                            GameEngine.this.gui.setImage(GameEngine.this.currentRoom.getImagePath());
+                                            if (GameEngine.this.currentRoom.hasPerson()) {
+                                                GameEngine.this.gui
+                                                        .setPersonImage(GameEngine.this.currentRoom.getPersonIconPath());
+                                            } else {
+                                                GameEngine.this.gui.setPersonImage("");
+                                            }
+                                            GameEngine.this.gui.println("");
+                                            GameEngine.this.gui.println("");
+                                            GameEngine.this.gui.println("[... a few hours later...]");
+                                            GameEngine.this.gui.println(GameEngine.this.currentRoom.getLongDescription());
+                                            GameEngine.this.gui.setInputEnabled(true);
+                                        }
+                                    });
+                                    transitionTimer.setRepeats(false);
+                                    transitionTimer.start();
+                                }
+                            });
                     this.hero.headmastertalk = 5;
                     break;
                 }
+                case 4: {
+                    break;
+                }
                 case 5: {
-                    this.gui.println("[Me] I... will... not... let.... ");
-                    this.gui.println("[Headmaster] But you have, you already have...");
-                    this.hero.headmastertalk = 6;
-                    this.hero.headmasterout = true;
                     break;
                 }
                 case 6: {
