@@ -37,7 +37,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 public class UserInterface
-extends JFrame {
+        extends JFrame {
     static /* synthetic */ Class class$egoproject$UserInterface;
     ImageIcon downtIcon;
     private GameEngine engine;
@@ -73,7 +73,7 @@ extends JFrame {
     ImageIcon useIcon;
 
     public UserInterface(GameEngine gameEngine) {
-        super("The EGO Project (2003) - Eliades Demetrios s0467090@sms.ed.ac.uk");
+        super("The EGO Project (2004)");
         this.jButton1 = new JButton();
         this.jButton2 = new JButton();
         this.jButton3 = new JButton();
@@ -84,15 +84,33 @@ extends JFrame {
         this.jButton6 = new JButton();
         this.jButton7 = new JButton();
         this.jLabel2 = new JLabel();
-        this.upIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/arrowup.png"));
-        this.rightIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/arrowright.png"));
-        this.leftIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/arrowleft.png"));
-        this.downtIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/arrowdown.png"));
-        this.lookIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/look.png"));
-        this.takeIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/take.png"));
-        this.useIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/use.png"));
-        this.talkIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/talk.png"));
-        this.helpIcon = new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource("img/help.png"));
+        this.upIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/arrowup.png"));
+        this.rightIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/arrowright.png"));
+        this.leftIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/arrowleft.png"));
+        this.downtIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/arrowdown.png"));
+        this.lookIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/look.png"));
+        this.takeIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/take.png"));
+        this.useIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/use.png"));
+        this.talkIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/talk.png"));
+        this.helpIcon = new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource("img/help.png"));
         this.jButton8 = new JButton();
         this.jButton9 = new JButton();
         this.jLabel3 = new JLabel();
@@ -103,8 +121,7 @@ extends JFrame {
         try {
             this.jbInit();
             this.setVisible(true);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         this.setVisible(true);
@@ -119,8 +136,7 @@ extends JFrame {
     static /* synthetic */ Class class$(String x0) {
         try {
             return Class.forName(x0);
-        }
-        catch (ClassNotFoundException x1) {
+        } catch (ClassNotFoundException x1) {
             throw new NoClassDefFoundError(x1.getMessage());
         }
     }
@@ -159,7 +175,8 @@ extends JFrame {
                 this.engine.interpretCommand("use " + this.jList1.getSelectedValue());
             } else {
                 int[] b = this.jList1.getSelectedIndices();
-                this.engine.interpretCommand("use " + this.inventoryItems.get(b[0]) + " " + this.inventoryItems.get(b[1]));
+                this.engine
+                        .interpretCommand("use " + this.inventoryItems.get(b[0]) + " " + this.inventoryItems.get(b[1]));
             }
         } else {
             this.engine.interpretCommand("use");
@@ -336,24 +353,24 @@ extends JFrame {
         this.jLabel4.setToolTipText("");
         this.jLabel4.setFont(new Font("Kristen ITC", 1, 17));
         this.jLabel4.setBackground(Color.black);
-        this.getContentPane().add((Component)this.jLabel1, null);
-        this.getContentPane().add((Component)this.jButton1, null);
-        this.getContentPane().add((Component)this.jButton2, null);
-        this.getContentPane().add((Component)this.jButton9, null);
-        this.getContentPane().add((Component)this.jScrollPane1, null);
-        this.jScrollPane1.getViewport().add((Component)this.jTextArea1, null);
-        this.getContentPane().add((Component)this.jTextField1, null);
-        this.getContentPane().add((Component)this.jTextField2, null);
-        this.getContentPane().add((Component)this.jLabel3, null);
-        this.getContentPane().add((Component)this.jButton3, null);
-        this.getContentPane().add((Component)this.jButton4, null);
-        this.getContentPane().add((Component)this.jList1, null);
-        this.getContentPane().add((Component)this.jButton7, null);
-        this.getContentPane().add((Component)this.jButton8, null);
-        this.getContentPane().add((Component)this.jLabel2, null);
-        this.getContentPane().add((Component)this.jLabel4, null);
-        this.getContentPane().add((Component)this.jButton5, null);
-        this.getContentPane().add((Component)this.jButton6, null);
+        this.getContentPane().add((Component) this.jLabel1, null);
+        this.getContentPane().add((Component) this.jButton1, null);
+        this.getContentPane().add((Component) this.jButton2, null);
+        this.getContentPane().add((Component) this.jButton9, null);
+        this.getContentPane().add((Component) this.jScrollPane1, null);
+        this.jScrollPane1.getViewport().add((Component) this.jTextArea1, null);
+        this.getContentPane().add((Component) this.jTextField1, null);
+        this.getContentPane().add((Component) this.jTextField2, null);
+        this.getContentPane().add((Component) this.jLabel3, null);
+        this.getContentPane().add((Component) this.jButton3, null);
+        this.getContentPane().add((Component) this.jButton4, null);
+        this.getContentPane().add((Component) this.jList1, null);
+        this.getContentPane().add((Component) this.jButton7, null);
+        this.getContentPane().add((Component) this.jButton8, null);
+        this.getContentPane().add((Component) this.jLabel2, null);
+        this.getContentPane().add((Component) this.jLabel4, null);
+        this.getContentPane().add((Component) this.jButton5, null);
+        this.getContentPane().add((Component) this.jButton6, null);
     }
 
     public void println(String s) {
@@ -368,11 +385,15 @@ extends JFrame {
     }
 
     public void setImage(String commandLine) {
-        this.jLabel1.setIcon(new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource(commandLine)));
+        this.jLabel1.setIcon(new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource(commandLine)));
     }
 
     public void setPersonImage(String commandLine) {
-        this.jLabel2.setIcon(new ImageIcon((class$egoproject$UserInterface == null ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface")) : class$egoproject$UserInterface).getResource(commandLine)));
+        this.jLabel2.setIcon(new ImageIcon((class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource(commandLine)));
     }
 
     void this_windowClosing(WindowEvent e) {
