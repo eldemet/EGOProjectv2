@@ -92,7 +92,9 @@ public class Room {
     }
 
     public boolean is(String string) {
-        return this.imagePath.startsWith(string);
+        int lastSlash = Math.max(this.imagePath.lastIndexOf('/'), this.imagePath.lastIndexOf('\\'));
+        String fileName = lastSlash >= 0 ? this.imagePath.substring(lastSlash + 1) : this.imagePath;
+        return fileName.startsWith(string);
     }
 
     public void removeItem(String itemName) {

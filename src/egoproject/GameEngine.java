@@ -164,15 +164,21 @@ public class GameEngine {
         if (nextRoom == null) {
             this.gui.println("There is no way going there!");
         } else {
-            if (this.currentRoom.is("door") & direction.equals("forward") && !this.hero.shoes | this.hero.locked) {
+            boolean leavingBedroomDoor = this.currentRoom.is("door") && direction.equals("forward");
+            boolean leavingKitchen = this.currentRoom.is("kitchen") && direction.equals("forward");
+            boolean enteringBusSeat = this.currentRoom.is("coinslotbus")
+                    && (direction.equals("forward") || direction.equals("right"));
+            boolean enteringLabPanel = this.currentRoom.is("lab") && direction.equals("forward");
+
+            if (leavingBedroomDoor && (!this.hero.shoes || this.hero.locked)) {
                 this.gui.println("I cannot leave yet, need the shoes and a way out of the room!");
                 return;
             }
-            if (this.currentRoom.is("kitchen") & direction.equals("forward") && !this.hero.kitchensafe) {
+            if (leavingKitchen && !this.hero.kitchensafe) {
                 this.gui.println("[Mother] Where do you think you're going? Sit here. EAT!");
                 return;
             }
-            if (this.currentRoom.is("coinslotbus") & (direction.equals("forward") | direction.equals("right"))) {
+            if (enteringBusSeat) {
                 if (!this.hero.buscoin) {
                     this.gui.println(
                             "[Driver] Hey what do ya think yer doin'? Pay up or walk, laddy\n[Me] Ok ok just a sec.\n(Oh no, I don't have any coins to put in the slot)");
@@ -196,12 +202,13 @@ public class GameEngine {
                 }
                 return;
             }
-            if (this.currentRoom.is("lab") && !this.hero.madout & direction.equals("forward")) {
+            if (enteringLabPanel && !this.hero.madout) {
                 this.gui.println("I can't go there, he will see me. Only if he was asleep or something");
                 return;
             }
-            if (this.currentRoom.is("panel") & this.hero.theend) {
+            if (this.currentRoom.is("panel") && this.hero.theend) {
                 this.endscene();
+                return;
             } else {
                 this.currentRoom = nextRoom;
                 this.gui.setImage(this.currentRoom.getImagePath());
@@ -406,7 +413,7 @@ public class GameEngine {
                     "Oh oh, that crazy guy is starting to get out of the coma, I have to find a way to stop him!");
             this.hero.unplugged = true;
         }
-        if (this.hero.unplugged & (itemName.equals("chip") | itemName.equals("gun"))) {
+        if (this.hero.unplugged && (itemName.equals("chip") || itemName.equals("gun"))) {
             this.gui.println("I take the gun and the chip, the gun is not yet loaded.");
             this.gui.removeListItem("plug");
             this.gui.setImage("img/panel3.png");
@@ -573,12 +580,12 @@ public class GameEngine {
             this.gui.println("Cannot use it, I don't have the " + itemUse);
             return;
         }
-        if (!itemUseWith.equals("") & !this.hero.hasItem(itemUseWith)) {
+        if (!itemUseWith.equals("") && !this.hero.hasItem(itemUseWith)) {
             this.gui.println("Cannot do that, I don't have the " + itemUseWith);
             return;
         }
         if (itemUse.equals("shoes")) {
-            if (!this.hero.shoes & this.hero.hasItem("shoes")) {
+            if (!this.hero.shoes && this.hero.hasItem("shoes")) {
                 this.gui.println("I put on the shoes");
                 this.hero.shoes = true;
                 this.gui.removeListItem("shoes");
@@ -590,14 +597,16 @@ public class GameEngine {
             }
             return;
         }
-        if (this.currentRoom.is("door") && itemUse.equals("gadget") & this.hero.hasItem("gadget") & this.hero.locked) {
+        if (this.currentRoom.is("door") && itemUse.equals("gadget") && this.hero.hasItem("gadget")
+                && this.hero.locked) {
             this.gui.println("P I E C E of cake! Door opened...");
             this.hero.locked = false;
             this.gui.setImage("img/door4.png");
             this.currentRoom.changeImagePath("img/door4.png");
             return;
         }
-        if (itemUse.equals("pen") & itemUseWith.equals("nail") | itemUse.equals("nail") & itemUseWith.equals("pen")) {
+        if ((itemUse.equals("pen") && itemUseWith.equals("nail"))
+                || (itemUse.equals("nail") && itemUseWith.equals("pen"))) {
             this.gui.println("WOW!!! I've created a GADGET to open doors!\nI'm really incredible!!!");
             this.gui.removeListItem("pen");
             this.gui.removeListItem("nail");
@@ -607,15 +616,15 @@ public class GameEngine {
             this.hero.addItem("gadget");
             return;
         }
-        if (itemUse.equals("pen") & this.currentRoom.is("door")) {
+        if (itemUse.equals("pen") && this.currentRoom.is("door")) {
             this.gui.println("It's a good idea to use it, but the pen doesn't fit into the keyhole");
             return;
         }
-        if (itemUse.equals("nail") & this.currentRoom.is("door")) {
+        if (itemUse.equals("nail") && this.currentRoom.is("door")) {
             this.gui.println("I can't get a good grip with it... I need to try something else");
             return;
         }
-        if (itemUse.equals("egg") & this.hero.hasItem("egg") & this.hero.hasItem("cookies")) {
+        if (itemUse.equals("egg") && this.hero.hasItem("egg") && this.hero.hasItem("cookies")) {
             this.gui.removeListItem("egg");
             this.gui.setImage("img/kitchen4.png");
             this.currentRoom.changeImagePath("img/kitchen4.png");
@@ -628,7 +637,7 @@ public class GameEngine {
             this.hero.kitchensafe = true;
             return;
         }
-        if (this.currentRoom.is("coinslotbus") & itemUse.equals("cookies")) {
+        if (this.currentRoom.is("coinslotbus") && itemUse.equals("cookies")) {
             this.gui.println(
                     "[Me] Ehm, sir, there's somebody ticking your window\n(As he turns his head, I quickly squeeze the green cookies into the keyhole, and they fit!!! The driver turns again)\n[Driver] Yer must be dreaming laddy... Aha!, you've paid! Ok quickly to yer seat now");
             this.hero.removeItem("cookies");
@@ -636,13 +645,13 @@ public class GameEngine {
             this.hero.buscoin = true;
             return;
         }
-        if (this.currentRoom.is("schoolclass") & itemUse.equals("sharpener")) {
+        if (this.currentRoom.is("schoolclass") && itemUse.equals("sharpener")) {
             this.gui.println(
                     "[Teacher] WHAT EXACTLY DO YOU THINK YOU'RE DOING?\nHAND OVER THE ESSAY N O W!\n[Me] ...\n(Ok. I'm scared. I'm definitely really scared). I put the sharpener in my pocket");
             this.hero.paperrequest = true;
             return;
         }
-        if (this.currentRoom.is("schoolclass") & itemUse.equals("essay")) {
+        if (this.currentRoom.is("schoolclass") && itemUse.equals("essay")) {
             if (this.hero.hasItem("sharpener")) {
                 this.hero.removeItem("essay");
                 this.gui.removeListItem("essay");
@@ -679,7 +688,7 @@ public class GameEngine {
             }
         }
         if (this.currentRoom.is("lab")) {
-            if (this.hero.madeyesshut & itemUse.equals("book")) {
+            if (this.hero.madeyesshut && itemUse.equals("book")) {
                 this.gui.removeListItem("book");
                 this.hero.removeItem("book");
                 this.gui.setPersonImage("img/madscientist2.png");
@@ -691,7 +700,7 @@ public class GameEngine {
             this.gui.println("He is watching around the lab, alert!");
         }
         if (this.currentRoom.is("panel")) {
-            if (itemUse.equals("gun") | itemUse.equals("chip")) {
+            if (itemUse.equals("gun") || itemUse.equals("chip")) {
                 this.gui.println("I load the chip in the gun");
                 this.gui.removeListItem("gun");
                 this.gui.removeListItem("chip");
@@ -711,7 +720,7 @@ public class GameEngine {
                 this.hero.madchipon = true;
                 return;
             }
-            if (itemUse.equals("stop-sign") & this.hero.madchipon) {
+            if (itemUse.equals("stop-sign") && this.hero.madchipon) {
                 this.gui.setImage("img/panel4.png");
                 this.gui.println(
                         "[M.Sc] Oh NO! ANYTHING BUT THAT! I cannot move, my brain is programmed to stop on traffic signs. I cannot move a single finger. OH MY PROJECT IT IS RUINED....");
