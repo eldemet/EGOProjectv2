@@ -16,8 +16,14 @@ public class Room {
     private String imagePath;
     private ArrayList items;
     private People person;
+    private String roomId;
 
     public Room(String description, String imagePath) {
+        this(resolveRoomId(imagePath), description, imagePath);
+    }
+
+    public Room(String roomId, String description, String imagePath) {
+        this.roomId = roomId;
         this.description = description;
         this.imagePath = imagePath;
         this.exits = new HashMap();
@@ -92,9 +98,7 @@ public class Room {
     }
 
     public boolean is(String string) {
-        int lastSlash = Math.max(this.imagePath.lastIndexOf('/'), this.imagePath.lastIndexOf('\\'));
-        String fileName = lastSlash >= 0 ? this.imagePath.substring(lastSlash + 1) : this.imagePath;
-        return fileName.startsWith(string);
+        return this.roomId.startsWith(string);
     }
 
     public void removeItem(String itemName) {
@@ -135,5 +139,12 @@ public class Room {
 
     public void setPersonTalk(String s) {
         this.person.setPeopleWords(s);
+    }
+
+    private static String resolveRoomId(String imagePath) {
+        int lastSlash = Math.max(imagePath.lastIndexOf('/'), imagePath.lastIndexOf('\\'));
+        String fileName = lastSlash >= 0 ? imagePath.substring(lastSlash + 1) : imagePath;
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex >= 0 ? fileName.substring(0, dotIndex) : fileName;
     }
 }

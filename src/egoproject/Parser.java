@@ -15,6 +15,9 @@ public class Parser {
         String word1 = tokenizer.hasMoreTokens() ? tokenizer.nextToken() : null;
         String word2 = tokenizer.hasMoreTokens() ? tokenizer.nextToken() : null;
         String word3 = tokenizer.hasMoreTokens() ? tokenizer.nextToken() : null;
+        if ("use".equals(word1) && "and".equals(word3) && tokenizer.hasMoreTokens()) {
+            word3 = tokenizer.nextToken();
+        }
         if (this.commands.isCommand(word1)) {
             return new Command(word1, word2, word3);
         }

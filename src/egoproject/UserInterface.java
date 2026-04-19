@@ -16,15 +16,20 @@ import egoproject.UserInterface_jButton9_actionAdapter;
 import egoproject.UserInterface_jTextField2_actionAdapter;
 import egoproject.UserInterface_jTextField2_mouseAdapter;
 import egoproject.UserInterface_this_windowAdapter;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.image.ImageObserver;
+import java.net.URL;
 import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -41,6 +46,8 @@ import javax.swing.border.TitledBorder;
 public class UserInterface
         extends JFrame {
     static /* synthetic */ Class class$egoproject$UserInterface;
+    private static final int SCENE_FADE_DURATION_MS = 500;
+    private static final int SCENE_FADE_INTERVAL_MS = 25;
     ImageIcon downtIcon;
     private GameEngine engine;
     ImageIcon helpIcon;
@@ -54,7 +61,8 @@ public class UserInterface
     JButton jButton7;
     JButton jButton8;
     JButton jButton9;
-    JLabel jLabel1 = new JLabel();
+    JLabel animatedSceneLabel = new JLabel();
+    FadeLabel jLabel1 = new FadeLabel();
     JLabel jLabel2;
     JLabel jLabel3;
     JLabel jLabel4;
@@ -71,6 +79,8 @@ public class UserInterface
     TitledBorder titledBorder1;
     TitledBorder titledBorder2;
     TitledBorder titledBorder3;
+    private String currentScenePath;
+    private Timer sceneFadeTimer;
     private Timer timedDialogueTimer;
     ImageIcon upIcon;
     ImageIcon useIcon;
@@ -215,8 +225,12 @@ public class UserInterface
         this.titledBorder3 = new TitledBorder("");
         this.jLabel1.setBackground(Color.black);
         this.jLabel1.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.jLabel1.setText("pictures");
+        this.jLabel1.setText("");
         this.jLabel1.setBounds(new Rectangle(141, 10, 550, 400));
+        this.animatedSceneLabel.setBackground(Color.black);
+        this.animatedSceneLabel.setBorder(null);
+        this.animatedSceneLabel.setText("");
+        this.animatedSceneLabel.setBounds(new Rectangle(141, 10, 550, 400));
         this.getContentPane().setBackground(Color.black);
         this.setForeground(Color.lightGray);
         this.setResizable(false);
@@ -357,6 +371,7 @@ public class UserInterface
         this.jLabel4.setFont(new Font("Kristen ITC", 1, 17));
         this.jLabel4.setBackground(Color.black);
         this.getContentPane().add((Component) this.jLabel1, null);
+        this.getContentPane().add((Component) this.animatedSceneLabel, null);
         this.getContentPane().add((Component) this.jButton1, null);
         this.getContentPane().add((Component) this.jButton2, null);
         this.getContentPane().add((Component) this.jButton9, null);
@@ -424,9 +439,44 @@ public class UserInterface
     }
 
     public void setImage(String commandLine) {
-        this.jLabel1.setIcon(new ImageIcon((class$egoproject$UserInterface == null
-                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
-                : class$egoproject$UserInterface).getResource(commandLine)));
+        ImageIcon nextIcon = this.loadImageIcon(commandLine);
+        if (nextIcon == null) {
+            this.stopSceneFade();
+            this.clearAnimatedScene();
+            this.jLabel1.setSceneIcon(null);
+            this.currentScenePath = null;
+            return;
+        }
+        if (commandLine != null && commandLine.toLowerCase().endsWith(".gif")) {
+            this.stopSceneFade();
+            this.showAnimatedScene(nextIcon);
+            this.currentScenePath = commandLine;
+            return;
+        }
+        this.clearAnimatedScene();
+        if (!this.jLabel1.hasSceneIcon()) {
+            this.stopSceneFade();
+            this.jLabel1.setSceneIcon(nextIcon);
+            this.currentScenePath = commandLine;
+            return;
+        }
+        boolean sameSceneImage = commandLine != null && commandLine.equals(this.currentScenePath);
+        this.currentScenePath = commandLine;
+        this.startSceneFade(nextIcon, false, sameSceneImage);
+    }
+
+    public void fadeInImage(String commandLine) {
+        ImageIcon nextIcon = this.loadImageIcon(commandLine);
+        if (nextIcon == null) {
+            this.stopSceneFade();
+            this.clearAnimatedScene();
+            this.jLabel1.setSceneIcon(null);
+            this.currentScenePath = null;
+            return;
+        }
+        this.clearAnimatedScene();
+        this.currentScenePath = commandLine;
+        this.startSceneFade(nextIcon, true, false);
     }
 
     public void setPersonImage(String commandLine) {
@@ -451,5 +501,153 @@ public class UserInterface
 
     void this_windowClosing(WindowEvent e) {
         this.dispose();
+    }
+
+    private ImageIcon loadImageIcon(String resourcePath) {
+        URL resource = (class$egoproject$UserInterface == null
+                ? (class$egoproject$UserInterface = UserInterface.class$("egoproject.UserInterface"))
+                : class$egoproject$UserInterface).getResource(resourcePath);
+        if (resource == null) {
+            return null;
+        }
+        return new ImageIcon(resource);
+    }
+
+    private void clearAnimatedScene() {
+        this.animatedSceneLabel.setIcon(null);
+        this.animatedSceneLabel.setVisible(false);
+        this.animatedSceneLabel.repaint();
+    }
+
+    private void showAnimatedScene(ImageIcon icon) {
+        this.jLabel1.setSceneIcon(null);
+        this.animatedSceneLabel.setIcon(icon);
+        this.animatedSceneLabel.setVisible(true);
+        this.animatedSceneLabel.revalidate();
+        this.animatedSceneLabel.repaint();
+        this.animatedSceneLabel.paintImmediately(0, 0, this.animatedSceneLabel.getWidth(),
+                this.animatedSceneLabel.getHeight());
+    }
+
+    private void startSceneFade(final ImageIcon nextIcon) {
+        this.startSceneFade(nextIcon, false, false);
+    }
+
+    private void startSceneFade(final ImageIcon nextIcon, boolean fromBlank) {
+        this.startSceneFade(nextIcon, fromBlank, false);
+    }
+
+    private void startSceneFade(final ImageIcon nextIcon, boolean fromBlank, final boolean throughBlack) {
+        this.stopSceneFade();
+        this.jLabel1.prepareFade(nextIcon, fromBlank, throughBlack);
+        final int totalSteps = Math.max(1, SCENE_FADE_DURATION_MS / SCENE_FADE_INTERVAL_MS);
+        final int[] currentStep = new int[]{0};
+        this.sceneFadeTimer = new Timer(SCENE_FADE_INTERVAL_MS, new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                ++currentStep[0];
+                UserInterface.this.jLabel1.setTransitionProgress((float)currentStep[0] / (float)totalSteps,
+                        throughBlack);
+                if (currentStep[0] >= totalSteps) {
+                    UserInterface.this.stopSceneFade();
+                }
+            }
+        });
+        this.sceneFadeTimer.start();
+    }
+
+    private void stopSceneFade() {
+        if (this.sceneFadeTimer != null) {
+            this.sceneFadeTimer.stop();
+            this.sceneFadeTimer = null;
+        }
+        this.jLabel1.completeFade();
+    }
+
+    private static class FadeLabel extends JLabel {
+        private ImageIcon currentIcon;
+        private float currentAlpha = 1.0f;
+        private ImageIcon nextIcon;
+        private float nextAlpha = 0.0f;
+
+        private void completeFade() {
+            if (this.nextIcon != null) {
+                this.currentIcon = this.nextIcon;
+                this.nextIcon = null;
+            }
+            this.currentAlpha = this.currentIcon == null ? 0.0f : 1.0f;
+            this.nextAlpha = 0.0f;
+            this.repaint();
+        }
+
+        private boolean hasSceneIcon() {
+            return this.currentIcon != null;
+        }
+
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            this.paintIcon(g, this.currentIcon, this.currentAlpha);
+            if (this.nextIcon != null) {
+                this.paintIcon(g, this.nextIcon, this.nextAlpha);
+            }
+        }
+
+        public boolean imageUpdate(java.awt.Image img, int infoflags, int x, int y, int width, int height) {
+            if ((infoflags & (ImageObserver.FRAMEBITS | ImageObserver.ALLBITS)) != 0) {
+                this.repaint();
+            }
+            return super.imageUpdate(img, infoflags, x, y, width, height);
+        }
+
+        private void paintIcon(Graphics g, ImageIcon icon, float alpha) {
+            if (icon == null) {
+                return;
+            }
+            Graphics2D graphics = (Graphics2D)g.create();
+            graphics.setComposite(AlphaComposite.getInstance(3, alpha));
+            int x = (this.getWidth() - icon.getIconWidth()) / 2;
+            int y = (this.getHeight() - icon.getIconHeight()) / 2;
+            icon.paintIcon(this, graphics, Math.max(0, x), Math.max(0, y));
+            graphics.dispose();
+        }
+
+        private void prepareFade(ImageIcon icon, boolean fromBlank, boolean throughBlack) {
+            if (fromBlank) {
+                this.currentIcon = null;
+            }
+            this.nextIcon = icon;
+            this.currentAlpha = this.currentIcon == null ? 0.0f : 1.0f;
+            this.nextAlpha = 0.0f;
+            if (throughBlack) {
+                this.currentAlpha = 1.0f;
+                this.nextAlpha = 0.0f;
+            }
+            this.repaint();
+        }
+
+        private void setTransitionProgress(float alpha, boolean throughBlack) {
+            float clamped = Math.max(0.0f, Math.min(1.0f, alpha));
+            if (throughBlack) {
+                if (clamped < 0.5f) {
+                    this.currentAlpha = 1.0f - clamped * 2.0f;
+                    this.nextAlpha = 0.0f;
+                } else {
+                    this.currentAlpha = 0.0f;
+                    this.nextAlpha = (clamped - 0.5f) * 2.0f;
+                }
+            } else {
+                this.currentAlpha = this.currentIcon == null ? 0.0f : 1.0f;
+                this.nextAlpha = clamped;
+            }
+            this.repaint();
+        }
+
+        private void setSceneIcon(ImageIcon icon) {
+            this.currentIcon = icon;
+            this.nextIcon = null;
+            this.currentAlpha = icon == null ? 0.0f : 1.0f;
+            this.nextAlpha = 0.0f;
+            this.repaint();
+        }
     }
 }

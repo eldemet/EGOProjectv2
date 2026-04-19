@@ -16,6 +16,7 @@ import javax.swing.Timer;
 
 public class GameEngine {
     private Room currentRoom;
+    private Timer endingTimer;
     private UserInterface gui;
     private Hero hero;
     private Parser parser = new Parser();
@@ -42,27 +43,27 @@ public class GameEngine {
         People madscientist = new People("A mad scientist!", "img/madscientist1.png",
                 "[Mad Scientist (MSc)] What? Anybody said anything?");
         People madscientist2 = new People("HE IS FURIOUS", "img/madscientist2.png", "YOU ARE GOING TO DIE!");
-        Room bedroom = new Room("This is my bedroom. It's untidy because I just woke up!", "img/bed2.png");
-        Room door = new Room(
+        Room bedroom = new Room("bedroom", "This is my bedroom. It's untidy because I just woke up!", "img/bed2.png");
+        Room door = new Room("door",
                 "The door is locked.\nOh no... my older brother once again locked me inside!\nI shouldn't have 'borrowed' his chocolate last night... ",
                 "img/door1.png");
-        Room kitchen = new Room("My house's kitchen. I have to get out of here QUICKLY!", "img/kitchen1.png");
-        Room yard = new Room("My school bus. Hope it doesn't leave without me. It's far to my school...",
+        Room kitchen = new Room("kitchen", "My house's kitchen. I have to get out of here QUICKLY!", "img/kitchen1.png");
+        Room yard = new Room("yard", "My school bus. Hope it doesn't leave without me. It's far to my school...",
                 "img/schoolbus1.png");
-        Room bus = new Room("In the entrance of the bus, is the coinslot. No money, no ride...", "img/coinslotbus.png");
-        Room busseat = new Room("A bus seat?", "img/busseat.gif");
-        Room schoolclass = new Room(
+        Room bus = new Room("coinslotbus", "In the entrance of the bus, is the coinslot. No money, no ride...", "img/coinslotbus.png");
+        Room busseat = new Room("busseat", "A bus seat?", "img/busseat.gif");
+        Room schoolclass = new Room("schoolclass",
                 "My class. My teacher. You can really see a bullet hole in his head! Ex-war hero, he imagines we are troopers. I really need to distract the teacher",
                 "img/schoolclass1.png");
-        Room headmastersoffice = new Room("The headmaster's office... I have had bad experiences in here before!",
+        Room headmastersoffice = new Room("headmastersoffice", "The headmaster's office... I have had bad experiences in here before!",
                 "img/headmastersoffice.png");
-        Room dungeon = new Room(
+        Room dungeon = new Room("dungeon",
                 "Grrr... Cold... Dungeon... Why, what, how...? My legs and hands are tied with rope. I cannot move. My bag is next to me",
                 "img/dungeon1.png");
-        Room lab = new Room(
+        Room lab = new Room("lab",
                 "The mad scientist's lab... I must be very careful now. Have to find a way to knock him down and get to the control panel. I am above",
                 "img/lab1.png");
-        Room panel = new Room("I must deactivate the Control Panel", "img/panel1.png");
+        Room panel = new Room("panel", "I must deactivate the Control Panel", "img/panel1.png");
         bedroom.setExit("right", door);
         bedroom.setExit("left", door);
         door.setExit("forward", kitchen);
@@ -88,22 +89,22 @@ public class GameEngine {
         headmastersoffice.setExit("right", dungeon);
         headmastersoffice.setExit("left", dungeon);
         headmastersoffice.setPerson(headmaster);
-        Room corridor1 = new Room("It's so dark... I have to find an exit... Did I already pass this place?",
+        Room corridor1 = new Room("corridor1", "It's so dark... I have to find an exit... Did I already pass this place?",
                 "img/corridor2.png");
-        Room corridor2 = new Room("It's so dark... I have to find an exit... Did I already pass this place?",
+        Room corridor2 = new Room("corridor2", "It's so dark... I have to find an exit... Did I already pass this place?",
                 "img/corridor2.png");
-        Room corridor3 = new Room("It's so dark... I have to find an exit... Did I already pass this place?",
+        Room corridor3 = new Room("corridor3", "It's so dark... I have to find an exit... Did I already pass this place?",
                 "img/corridor2.png");
-        Room corridor6 = new Room("It's so dark... I have to find an exit... Did I already pass this place?",
+        Room corridor6 = new Room("corridor6", "It's so dark... I have to find an exit... Did I already pass this place?",
                 "img/corridor2.png");
-        Room corridor9 = new Room("It's so dark... I have to find an exit... Did I already pass this place?",
+        Room corridor9 = new Room("corridor9", "It's so dark... I have to find an exit... Did I already pass this place?",
                 "img/corridor2.png");
-        Room corridor11 = new Room("An exit!", "img/corridor3.png");
-        Room corridor4 = new Room("A dead end", "img/corridor1.png");
-        Room corridor5 = new Room("A dead end", "img/corridor1.png");
-        Room corridor7 = new Room("A dead end", "img/corridor1.png");
-        Room corridor8 = new Room("A dead end", "img/corridor1.png");
-        Room corridor10 = new Room("A dead end", "img/corridor1.png");
+        Room corridor11 = new Room("corridor11", "An exit!", "img/corridor3.png");
+        Room corridor4 = new Room("corridor4", "A dead end", "img/corridor1.png");
+        Room corridor5 = new Room("corridor5", "A dead end", "img/corridor1.png");
+        Room corridor7 = new Room("corridor7", "A dead end", "img/corridor1.png");
+        Room corridor8 = new Room("corridor8", "A dead end", "img/corridor1.png");
+        Room corridor10 = new Room("corridor10", "A dead end", "img/corridor1.png");
         dungeon.setExit("forward", corridor1);
         dungeon.setExit("right", corridor1);
         dungeon.setPerson(guard);
@@ -152,6 +153,10 @@ public class GameEngine {
     }
 
     private void endscene() {
+        if (this.endingTimer != null) {
+            this.endingTimer.stop();
+            this.endingTimer = null;
+        }
         this.gui.setPersonImage("");
         this.gui.setImage("img/theend.png");
         this.gui.println("You are a great player, hope you had fun!\nPress QUIT to exit the game");
@@ -262,6 +267,10 @@ public class GameEngine {
                 this.useItem(command);
             }
         } else if (commandWord.equals("talk")) {
+            if (this.hero.theend) {
+                this.gui.println("It's over now. Press QUIT to exit the game.");
+                return;
+            }
             if (!this.currentRoom.hasPerson()) {
                 this.gui.println(
                         "There's no one to talk to. Unless you mean yourself.\nNot very intelligent though ;-)");
@@ -288,7 +297,7 @@ public class GameEngine {
 
     private void printLook() {
         String roomItems = this.currentRoom.getRoomItems();
-        if (roomItems == "") {
+        if (roomItems.isEmpty()) {
             this.gui.println("I see nothing else in here...");
         } else {
             this.gui.println("After a few seconds eye scanning, I can see the following:");
@@ -421,10 +430,10 @@ public class GameEngine {
             this.gui.removeListItem("plug");
             this.gui.setImage("img/panel3.png");
             if (itemName.equals("chip")) {
-                this.hero.hasItem("gun");
+                this.hero.addItem("gun");
                 this.gui.addListItem("gun");
             } else {
-                this.gui.addListItem("chip");
+                this.hero.addItem("chip");
                 this.gui.addListItem("chip");
             }
         }
@@ -478,7 +487,7 @@ public class GameEngine {
 
                                         public void actionPerformed(ActionEvent e) {
                                             GameEngine.this.currentRoom = GameEngine.this.currentRoom.getExit("back");
-                                            GameEngine.this.gui.setImage(GameEngine.this.currentRoom.getImagePath());
+                                            GameEngine.this.gui.fadeInImage(GameEngine.this.currentRoom.getImagePath());
                                             if (GameEngine.this.currentRoom.hasPerson()) {
                                                 GameEngine.this.gui
                                                         .setPersonImage(GameEngine.this.currentRoom.getPersonIconPath());
@@ -544,7 +553,7 @@ public class GameEngine {
                     this.currentRoom.removePerson();
                 }
             }
-        } else if (this.currentRoom.is("lab1")) {
+        } else if (this.currentRoom.is("lab")) {
             switch (this.hero.madtalk1) {
                 case 0: {
                     this.gui.println("[Me] Bohohoooo... ");
@@ -753,6 +762,8 @@ public class GameEngine {
             }
             if (itemUse.equals("stop-sign") && this.hero.madchipon) {
                 this.gui.setImage("img/panel4.png");
+                this.currentRoom.removePerson();
+                this.gui.setPersonImage("");
                 this.gui.println(
                         "[M.Sc] Oh NO! ANYTHING BUT THAT! I cannot move, my brain is programmed to stop on traffic signs. I cannot move a single finger. OH MY PROJECT IT IS RUINED....");
                 this.gui.println(
@@ -761,6 +772,17 @@ public class GameEngine {
                 this.gui.println("[Me] Eh, not a single boy. I had help from a person outside our world ;-) ");
                 this.gui.println("[M.Sc] Huh?");
                 this.hero.theend = true;
+                if (this.endingTimer != null) {
+                    this.endingTimer.stop();
+                }
+                this.endingTimer = new Timer(10000, new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        GameEngine.this.endscene();
+                    }
+                });
+                this.endingTimer.setRepeats(false);
+                this.endingTimer.start();
                 return;
             }
         }
