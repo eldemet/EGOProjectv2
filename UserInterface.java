@@ -195,7 +195,7 @@ extends JFrame {
         this.titledBorder3 = new TitledBorder("");
         this.jLabel1.setBackground(Color.black);
         this.jLabel1.setBorder(BorderFactory.createLineBorder(Color.black));
-        this.jLabel1.setText("pictuires");
+        this.jLabel1.setText("pictures");
         this.jLabel1.setBounds(new Rectangle(141, 10, 550, 400));
         this.getContentPane().setBackground(Color.black);
         this.setForeground(Color.lightGray);
