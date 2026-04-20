@@ -20,7 +20,8 @@ public class Game {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                SplashWindow splash = new SplashWindow("res/egoproject/img/dland.png", new Runnable() {
+                SplashWindow splash = new SplashWindow("res/egoproject/img/dland.png", "res/egoproject/mid/dland_splash.mid",
+                        new Runnable() {
 
                     public void run() {
                         new Game();
