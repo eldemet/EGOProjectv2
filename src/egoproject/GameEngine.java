@@ -31,13 +31,13 @@ public class GameEngine {
     private void createWorld() {
         this.hero = new Hero();
         People mother = new People("My mother", "img/mother.png",
-                "[Mother] Bear in mind you WILL NOT leave the house unless you take my chlorophyll cookies to school. I'm also preparing you other healthy things to eat, so wait a bit. Ah!, don't forget to throw the toaster to the garbage, it nearly got me electrocuted.");
+                "[Mother] Bear in mind you WILL NOT leave the house unless you take my chlorophyll cookies to school. I'm also preparing you other healthy things to eat, so wait a bit. Ah, don't forget to throw the toaster in the garbage, it nearly got me electrocuted.");
         People driver = new People("A regular bus driver", "img/driver.png",
-                "[Driver] Hey laddy, put the fare and grab a seat will ya? Don't have all day to wait you know!");
+                "[Driver] Hey laddie, put the fare in and grab a seat, will ya? I don't have all day to wait, you know!");
         People teacher = new People("My teacher", "img/teacher.png",
                 "[Teacher] Ok boys and girls, today you will return your essays. Did anybody forget? No excuses. No soldier of mine gives excuses. OK?\n[All class] YES SIR\n(yikes! I've only written the title! I'm DEAD)\n I have to find a way to distract him");
         People headmaster = new People("My headmaster", "",
-                "[Headmaster] Hello my son, have a seat. Why did your teacher send you to me?\n(press TALK to initiate conversation)");
+                "[Headmaster] Hello, my son, have a seat. Why did your teacher send you to me?\n(press TALK to initiate conversation)");
         People guard = new People("A guard", "img/guard.png",
                 "[Guard] Hey, kid, don't move or I'll shoot you\n[New voice from speaker] Welcome to my tower. I have instructed my guards to kill you if you try anything. We know you, we've been studying you. Don't try to escape. You will be killed instantly\n[Me] ...");
         People madscientist = new People("A mad scientist!", "img/madscientist1.png",
@@ -50,7 +50,7 @@ public class GameEngine {
         Room kitchen = new Room("kitchen", "My house's kitchen. I have to get out of here QUICKLY!", "img/kitchen1.png");
         Room yard = new Room("yard", "My school bus. Hope it doesn't leave without me. It's far to my school...",
                 "img/schoolbus1.png");
-        Room bus = new Room("coinslotbus", "In the entrance of the bus, is the coinslot. No money, no ride...", "img/coinslotbus.png");
+        Room bus = new Room("coinslotbus", "At the entrance of the bus is the coin slot. No money, no ride...", "img/coinslotbus.png");
         Room busseat = new Room("busseat", "A bus seat?", "img/busseat.gif");
         Room schoolclass = new Room("schoolclass",
                 "My class. My teacher. You can really see a bullet hole in his head! Ex-war hero, he imagines we are troopers. I really need to distract the teacher",
@@ -159,7 +159,7 @@ public class GameEngine {
         }
         this.gui.setPersonImage("");
         this.gui.setImage("img/theend.png");
-        this.gui.println("You are a great player, hope you had fun!\nPress QUIT to exit the game");
+        this.gui.println("You are a great player. I hope you had fun!\nPress QUIT to exit the game");
     }
 
     private void goRoom(Command command) {
@@ -290,7 +290,7 @@ public class GameEngine {
         this.gui.println("- go forward/back/left/right");
         this.gui.println("- look");
         this.gui.println("- take A (e.g. take pillow)");
-        this.gui.println("- use A   B   (e.g use mouse/ use dog cat)");
+        this.gui.println("- use A and B (e.g. use mouse and keyboard / use dog and cat)");
         this.gui.println("- help");
         this.gui.println("- quit");
     }
@@ -307,7 +307,7 @@ public class GameEngine {
 
     private void printWelcome() {
         this.gui.println(
-                "I slowly get out of bed...\nI am in my bedroom.\nThe time is 07:20. I have to go to school\nI get dressed, but I can't find my shoes...\nPress 'help' for, well you know!");
+                "I slowly get out of bed...\nI am in my bedroom.\nThe time is 07:20. I have to go to school\nI get dressed, but I can't find my shoes...\nPress 'help' for... well, you know.");
         this.gui.setImage("img/bed2.png");
     }
 
@@ -347,7 +347,7 @@ public class GameEngine {
         this.hero.addItem(itemName);
         this.gui.addListItem(itemName);
         if (itemName.equals("bag")) {
-            this.gui.println("Ah! my shoes were behind the bag. I'd better take them");
+            this.gui.println("Ah! My shoes were behind the bag. I'd better take them");
             this.gui.println("Inside the bag there is a book, a pen and an essay due for...\nOh-oh... TODAY!");
             Item shoes = new Item("A pair of SHOES. They're mine! both of them...", "shoes");
             Item pen = new Item("A yellow PEN, regular shape, quite solid", "pen");
@@ -390,7 +390,7 @@ public class GameEngine {
             this.gui.addListItem("toaster");
         }
         if (itemName.equals("toaster")) {
-            this.gui.println("Although I'll hate myself later, I also take the... green cookies");
+            this.gui.println("Although I'll hate myself later, I also take the... green cookies.");
             this.currentRoom.removeItem("cookies");
             if (this.hero.hasItem("egg")) {
                 this.gui.setImage("img/kitchen3.png");
@@ -422,7 +422,7 @@ public class GameEngine {
             this.gui.println("'Do not unplug'. Yeah right! That's too easy.");
             this.gui.setImage("img/panel2.png");
             this.gui.println(
-                    "Oh oh, that crazy guy is starting to get out of the coma, I have to find a way to stop him!");
+                    "Uh-oh, that crazy guy is starting to come out of the coma. I have to find a way to stop him!");
             this.hero.unplugged = true;
         }
         if (this.hero.unplugged && (itemName.equals("chip") || itemName.equals("gun"))) {
@@ -446,7 +446,7 @@ public class GameEngine {
                     this.gui.println(this.currentRoom.getPersonTalk());
                     this.gui.println("[Me] I did nothing sir, I am innocent!");
                     this.gui.println(
-                            "[Headmaster] Yes yes, that's what you said the last time. But it was you who blew the chemistry lab!");
+                            "[Headmaster] Yes, yes, that's what you said the last time. But it was you who blew the chemistry lab!");
                     this.hero.headmastertalk = 1;
                     break;
                 }
@@ -473,7 +473,7 @@ public class GameEngine {
                             new String[]{
                                     "[Me] You? Hypnotize me? NO WAY!",
                                     "[Headmaster] Relax, watch my eyes...",
-                                    "[Me] I... will... not... let.... ",
+                                    "[Me] I... will... not... let...",
                                     "[Headmaster] But you have, you already have...",
                                     "[Me] No... must... get... out..."
                             },
@@ -537,9 +537,9 @@ public class GameEngine {
                 }
                 case 2: {
                     this.gui.println(
-                            "[Me] Hey guard... Hi... Can you bring me something to eat? My mom started a diet with healthy foods, yuck stuff you know?");
+                            "[Me] Hey guard... Hi... can you bring me something to eat? My mom started a diet with healthy foods, you know, that yucky stuff?");
                     this.gui.println(
-                            "[Guard] Yeah, my lady started the same diet, it's yuck food every day. Well... perhaps... Hm, on second thought, No.");
+                            "[Guard] Yeah, my lady started the same diet. It's yucky food every day. Well... perhaps... hm, on second thought, no.");
                     this.hero.guardtalk = 3;
                     break;
                 }
@@ -547,7 +547,7 @@ public class GameEngine {
                     this.gui.println("[Me] Pretty pleaseeeeeeeeeeeeeeeeeeeee");
                     this.gui.println(
                             "[Guard] Hm... Well, you're tied up for the moment, I suppose I could go and bring you a piece of pizza from the fridge. Ok I'll go now, but if I hear anything fishy, BANG, get it?");
-                    this.gui.println("[Me] Eghm, ok?");
+                    this.gui.println("[Me] Ehm, okay?");
                     this.gui.setPersonImage("img/guard2.png");
                     this.hero.guardaway = true;
                     this.currentRoom.removePerson();
@@ -579,7 +579,7 @@ public class GameEngine {
                 case 3: {
                     this.gui.println("[Me] What do you mean? How?");
                     this.gui.println(
-                            "[M.Sc] Ah, you never could understand me. I have created a device to implant chips into children. It's so safe I will implant one on myself because I don't know how to drive! Who will believe that a child is actually my agent. They are small, they can sneak anywhere. It's the beginning of the EGO project...");
+                            "[M.Sc] Ah, you never could understand me. I have created a device to implant chips into children. It's so safe that I will implant one in myself because I don't know how to drive! Who will believe that a child is actually my agent? They are small, they can sneak anywhere. It's the beginning of the EGO project...");
                     this.hero.madtalk1 = 4;
                     break;
                 }
@@ -592,10 +592,10 @@ public class GameEngine {
                 }
                 case 5: {
                     this.gui.println("(Things are getting out of hand, I have to say something intelligent)");
-                    this.gui.println("[Me] Ehm, ehm... Eh, Bad boy? (Couldn't I do better?)");
+                    this.gui.println("[Me] Ehm, ehm... uh, bad boy? (Couldn't I do better?)");
                     this.gui.println(
-                            "[M.Sc] Uh? Bad... Boy... (claps) My... my mommy used to say this to me.... my mommy...(claps)");
-                    this.gui.println("(He puts his hands on his eyes and starts crying)\bI have to act now!");
+                            "[M.Sc] Uh? Bad... Boy... (claps) My... my mommy used to say this to me.... my mommy... (claps)");
+                    this.gui.println("(He puts his hands on his eyes and starts crying) I have to act now!");
                     this.hero.madeyesshut = true;
                     this.hero.madtalk1 = 6;
                     break;
@@ -679,7 +679,7 @@ public class GameEngine {
         }
         if (this.currentRoom.is("coinslotbus") && itemUse.equals("cookies")) {
             this.gui.println(
-                    "[Me] Ehm, sir, there's somebody ticking your window\n(As he turns his head, I quickly squeeze the green cookies into the keyhole, and they fit!!! The driver turns again)\n[Driver] Yer must be dreaming laddy... Aha!, you've paid! Ok quickly to yer seat now");
+                    "[Me] Ehm, sir, there's somebody tapping on your window\n(As he turns his head, I quickly squeeze the green cookies into the keyhole, and they fit!!! The driver turns again)\n[Driver] Yer must be dreaming, laddie... Aha, you've paid! Ok, quickly to yer seat now");
             this.hero.removeItem("cookies");
             this.gui.removeListItem("cookies");
             this.hero.buscoin = true;
@@ -734,7 +734,7 @@ public class GameEngine {
                 this.gui.setPersonImage("img/madscientist2.png");
                 this.hero.madout = true;
                 this.gui.println(
-                        "Great! He is out for a while. I have to stop the computer, I must not let him do his evil plans!!! (from which movie that was from?)");
+                        "Great! He is out for a while. I have to stop the computer, I must not let him do his evil plans!!! (What movie was that from?)");
                 return;
             }
             this.gui.println("He is watching around the lab, alert!");
@@ -756,7 +756,7 @@ public class GameEngine {
                 this.gui.setPersonImage("img/madscientist4.png");
                 this.gui.println(
                         "[M.Sc] What do you think you are doing? I was planning to implant this chip on myself! PREPARE TO D I E, I'm coming for you...");
-                this.gui.println("[Me] No way Jose! I know what to do next! (well, do you?)");
+                this.gui.println("[Me] No way, Jose! I know what to do next! (well, do you?)");
                 this.hero.madchipon = true;
                 return;
             }
@@ -765,7 +765,7 @@ public class GameEngine {
                 this.currentRoom.removePerson();
                 this.gui.setPersonImage("");
                 this.gui.println(
-                        "[M.Sc] Oh NO! ANYTHING BUT THAT! I cannot move, my brain is programmed to stop on traffic signs. I cannot move a single finger. OH MY PROJECT IT IS RUINED....");
+                        "[M.Sc] Oh NO! ANYTHING BUT THAT! I cannot move, my brain is programmed to stop on traffic signs. I cannot move a single finger. OH, MY PROJECT! IT IS RUINED...");
                 this.gui.println(
                         "[Me] That's for you to learn not to use little children for evil plans. I'll GO and call the police. You're going down...");
                 this.gui.println("[M.Sc] Who would believe it. I was defeated by a single boy...");
