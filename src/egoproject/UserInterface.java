@@ -133,6 +133,7 @@ public class UserInterface
         this.engine = gameEngine;
         try {
             this.jbInit();
+            this.setLocationRelativeTo(null);
             this.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();

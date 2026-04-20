@@ -4,7 +4,9 @@
 package egoproject;
 
 import egoproject.GameEngine;
+import egoproject.SplashWindow;
 import egoproject.UserInterface;
+import javax.swing.SwingUtilities;
 
 public class Game {
     private GameEngine engine = new GameEngine();
@@ -15,6 +17,17 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Game ga = new Game();
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                SplashWindow splash = new SplashWindow("res/egoproject/img/dland.png", new Runnable() {
+
+                    public void run() {
+                        new Game();
+                    }
+                });
+                splash.showSplash();
+            }
+        });
     }
 }
